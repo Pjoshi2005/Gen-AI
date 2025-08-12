@@ -7,7 +7,7 @@ class SimpleTokenizer {
 
     buildVocab() {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        let tokenId = 0; // 0 can be reserved for special token like <PAD>
+        let tokenId = 0; 
 
         const specialTokens = ["<SOS>", "<EOS>", "<UNK>"];
         for (let i = 0 ; i < specialTokens.length ; i++) {

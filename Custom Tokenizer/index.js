@@ -6,43 +6,64 @@ class SimpleTokenizer {
     }
 
     buildVocab() {
-        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        let tokenId = 0; 
+        let tokenId = 0;
 
+        //special tokens
         const specialTokens = ["<SOS>", "<EOS>", "<UNK>"];
-        for (let i = 0 ; i < specialTokens.length ; i++) {
-            this.charToToken[specialTokens] = tokenId;
-            this.tokenToChar[tokenId] = specialTokens;
+        for (let i = 0; i < specialTokens.length; i++) {
+            this.charToToken[specialTokens[i]] = tokenId;
+            this.tokenToChar[tokenId] = specialTokens[i];
             tokenId++;
         }
 
-
-        for (let i = 0; i < chars.length; i++) {
-            const char = chars[i];
+        // Lowercase letters a-z
+        for (let i = 0; i < 26; i++) {
+            const char = String.fromCharCode(97 + i); // 97 is 'a'
             this.charToToken[char] = tokenId;
             this.tokenToChar[tokenId] = char;
             tokenId++;
         }
 
-        // Add special tokens
-        this.charToToken["<UNK>"] = tokenId;
-        this.tokenToChar[tokenId] = "<UNK>";
+        // Uppercase letters A-Z
+        for (let i = 0; i < 26; i++) {
+            const char = String.fromCharCode(65 + i); // 65 is 'A'
+            this.charToToken[char] = tokenId;
+            this.tokenToChar[tokenId] = char;
+            tokenId++;
+        }
+
+        // Digits 0-9
+        for (let i = 0; i < 10; i++) {
+            const char = String.fromCharCode(48 + i); // 48 is '0'
+            this.charToToken[char] = tokenId;
+            this.tokenToChar[tokenId] = char;
+            tokenId++;
+        }
     }
 
     encode(text) {
-        return text.split("").map(char =>
-            this.charToToken[char] || this.charToToken["<UNK>"]
-        );
+        const tokens = [this.charToToken["<SOS>"]];
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            tokens.push(this.charToToken[char] || this.charToToken["<UNK>"]);
+        }
+        tokens.push(this.charToToken["<EOS>"]);
+        return tokens;
     }
 
     decode(tokens) {
-        return tokens.map(id =>
-            this.tokenToChar[id] || "<UNK>"
-        ).join("");
+        let result = "";
+        for (let i = 0; i < tokens.length; i++) {
+            const token = this.tokenToChar[tokens[i]];
+            if (token !== "<SOS>" && token !== "<EOS>") {
+                result += token;
+            }
+        }
+        return result;
     }
 }
 
-// Example usage:
+
 const tokenizer = new SimpleTokenizer();
 
 const encoded = tokenizer.encode("Hyy my name is hyy");

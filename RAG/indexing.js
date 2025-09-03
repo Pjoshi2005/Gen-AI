@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { OpenAIEmbeddings } from "@langchain/openai";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
 
